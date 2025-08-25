@@ -87,7 +87,7 @@ local function generate_spec(pal)
     type = pal.type_fg, -- #E4B28E
 
     builtin0 = pal.variable, -- builtin var
-    builtin1 = pal.func, -- builtin type
+    builtin1 = pal.orange.base, -- builtin type
     builtin2 = pal.orange.bright, -- builtin const
     builtin3 = pal.red.bright,
     dep = spec.fg3,
