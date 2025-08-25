@@ -23,7 +23,7 @@ local palette = {
   orange = Shade.new("#FAB795", "#FBC3A7", "#D89B7C"),
   pink = Shade.new("#EE64AE", "#F075B7", "#C85494"),
 
-  comment = "#6C6F93",
+  comment = "#232530",
 
   -- UI (Horizon dark)
   bg0 = "#1A1C23", -- statusline/float mais escuro
