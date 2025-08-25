@@ -16,7 +16,7 @@ local palette = {
   orange = Shade.new("#FAB795", "#FBC3A7", "#D89B7C"),
   pink = Shade.new("#EE64AE", "#F075B7", "#C85494"),
 
-  comment = "#4A4F66", -- mais discreto que #6C6F93
+  comment = "#4A4F66", -- mais discreto
 
   -- UI
   bg0 = "#1A1C23",
@@ -49,27 +49,39 @@ local function generate_spec(pal)
     sel1 = pal.sel1,
   }
 
-  -- >>> MAPEAMENTO FIEL AO HORIZON <<<
+  -- >>> MAPEAMENTO com ênfase em VERMELHO + AMARELO/LARANJA + AZUL
   spec.syntax = {
-    bracket = spec.fg3, -- pontuação/brackets mais “apagado”
-    comment = pal.comment, -- comentários discretos
-    string = pal.yellow.bright, -- Horizon usa pêssego/amarelo para strings
+    -- neutros
+    bracket = spec.fg3,
+    comment = pal.comment,
+    ident = spec.fg1,
+    variable = spec.fg1,
+    operator = pal.pink.base, -- salmão clássico do Horizon
+
+    -- “amarelo/laranja”: strings, números, consts, imports, enums
+    string = pal.yellow.base,
     number = pal.orange.base,
-    const = pal.orange.bright, -- constantes / imports / enum
+    const = pal.orange.bright,
+
+    -- “vermelho”: keywords, condicionais, statements
     keyword = pal.red.base,
+    conditional = pal.red.base,
     statement = pal.red.base,
-    operator = pal.pink.base, -- salmão
-    ident = spec.fg1, -- **neutro** (não ciano)
-    variable = spec.fg1, -- idem
-    field = pal.cyan.base, -- fields/propriedades/atributos
-    func = pal.magenta.base, -- funções/títulos em **roxo**
-    type = pal.magenta.base, -- tipos/classes/constructors roxo
-    builtin0 = pal.cyan.base, -- builtin var (ex.: builtins/attrs) ciano
-    builtin1 = pal.magenta.bright, -- builtin type em roxo vivo
-    builtin2 = pal.orange.bright, -- builtin const em laranja
-    builtin3 = pal.red.bright, -- reserva
     preproc = pal.pink.bright,
+
+    -- “azul”: funções e títulos
+    func = pal.blue.bright,
+
+    -- detalhes em cyan/verde/azul
+    field = pal.cyan.base, -- atributos/propriedades
+    type = pal.cyan.base, -- tipos/classes mais frios (sem roxo)
     regex = pal.yellow.bright,
+
+    -- builtins (seguindo mesma lógica)
+    builtin0 = pal.cyan.base, -- builtin var
+    builtin1 = pal.blue.bright, -- builtin type
+    builtin2 = pal.orange.bright, -- builtin const
+    builtin3 = pal.red.bright, -- reserva
     dep = spec.fg3,
   }
 
