@@ -79,7 +79,7 @@ local function generate_spec(pal)
     preproc = pal.pink.bright, -- PreProc
     regex = pal.yellow.bright, -- Regex
     statement = pal.magenta.base, -- Statements
-    string = pal.green.base, -- Strings
+    string = pal.red.base, -- Strings
     type = pal.yellow.base, -- Tipos
     variable = pal.white.base, -- Variáveis
   }
