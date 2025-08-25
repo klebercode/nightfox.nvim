@@ -1,39 +1,41 @@
 local C = require("nightfox.lib.color")
 local Shade = require("nightfox.lib.shade")
 
+-- HorizonFox — Nightfox palette reproduzindo a tabela do Horizon original
 local meta = { name = "horizonfox", light = false }
 
--- Paleta Horizon (dark)
+-- === Paleta (copiada/derivada da tabela original) ==========================
+-- ANSI normal/bright seguem a sua tabela. Para "dim" escolhi vizinhos coerentes.
 local palette = {
-  black = Shade.new("#1A1C23", "#232530", "#151720"),
-  red = Shade.new("#E95678", "#EC6A88", "#C7445F"),
-  green = Shade.new("#09F7A0", "#3FDAA4", "#07C985"),
-  yellow = Shade.new("#FAC29A", "#FFD2B9", "#DDAF8A"),
-  blue = Shade.new("#26BBD9", "#3FC6DE", "#1E9AB4"),
-  magenta = Shade.new("#B877DB", "#C691E9", "#9961BA"),
-  cyan = Shade.new("#21BFC2", "#6BE6E6", "#1AA6A9"),
-  white = Shade.new("#D5D8DA", "#FDF0ED", "#B7BBBE"),
-  orange = Shade.new("#FAB795", "#FBC3A7", "#D89B7C"),
-  pink = Shade.new("#F09383", "#F6A399", "#C9786F"), -- salmão (operators)
+  black = Shade.new("#1A1C23", "#232530", "#16161C"),
+  red = Shade.new("#E95678", "#EC6A88", "#D55070"), -- bright/alt e variável/tag do theme
+  green = Shade.new("#29D398", "#3FDAA4", "#24A075"),
+  yellow = Shade.new("#FAB795", "#FBC3A7", "#E4B28E"),
+  blue = Shade.new("#26BBD9", "#3FC4DE", "#208F93"), -- dim puxa pro azul-esverdeado do theme
+  magenta = Shade.new("#A86EC9", "#B877DB", "#9961BA"), -- keywords/special/storage = lavender
+  cyan = Shade.new("#59E1E3", "#6BE4E6", "#25B0BC"), -- func/type no theme é turquesa
+  white = Shade.new("#BBBBBB", "#D5D8DA", "#A3A7AB"),
+  orange = Shade.new("#DB887A", "#FAB38E", "#D89B7C"), -- const/regex/structure da tabela
+  pink = Shade.new("#EE64AC", "#F075B5", "#E95378"), -- cursor/pmenu_sel e operadores salmão
 
-  comment = "#4A4F66",
+  -- UI & auxiliares (da tabela "ui" e "theme")
+  comment = "#4C4D53", -- theme.comment.fg (italics é setado no syntax)
+  bg0 = "#1A1C23", -- border / fundo muito escuro
+  bg1 = "#1C1E26", -- theme.bg / sidebar_bg
+  bg2 = "#232530", -- backgroundAlt / float_bg / pmenu_bg
+  bg3 = "#2E303E", -- ui.accent / indent_guide_active_fg
+  bg4 = "#343647", -- color_column / visual
 
-  -- UI
-  bg0 = "#1A1C23",
-  bg1 = "#1C1E26",
-  bg2 = "#232530",
-  bg3 = "#2E303E",
-  bg4 = "#3A3D4C",
+  fg0 = "#D5D8DA", -- ui.lightText
+  fg1 = "#BBBBBB", -- theme.fg
+  fg2 = "#797B80", -- statusline_fg / active_line_number_fg
+  fg3 = "#54565C", -- git_ignored_fg (mais apagado)
 
-  fg0 = "#E6E9EB",
-  fg1 = "#D5D8DA",
-  fg2 = "#B9BEC4",
-  fg3 = "#6C6F93",
-
-  sel0 = "#232530",
-  sel1 = "#2E303E",
+  sel0 = "#232530", -- visual/popup
+  sel1 = "#21232D", -- cursorline (theme.cursorline_bg)
 }
 
+-- === Spec Nightfox =========================================================
 local function generate_spec(pal)
   local spec = {
     bg0 = pal.bg0,
@@ -49,48 +51,47 @@ local function generate_spec(pal)
     sel1 = pal.sel1,
   }
 
-  -- >>> Mapeamento alinhado ao Horizon (ênfase: red + orange/yellow + blue)
+  -- Mapeamento de sintaxe espelhando o "theme" que você mandou
   spec.syntax = {
-    -- neutros
-    bracket = spec.fg3,
-    comment = pal.comment,
-    ident = spec.fg1,
-    variable = spec.fg1,
+    comment = pal.comment, -- #4C4D53
+    bracket = "#6C6D71", -- theme.delimiter.fg
+    operator = pal.white.base, -- theme.operator.fg = #BBBBBB
+    string = "#E4A88A", -- theme.string.fg
+    number = pal.orange.base, -- theme.constant/regex = #DB887A
+    const = pal.orange.bright, -- "#FAB38E" (tertiaryAccent)
+    regex = pal.orange.base,
 
-    -- laranja/amarelo
-    string = pal.yellow.base, -- strings
-    number = pal.orange.base, -- números
-    const = pal.orange.bright, -- constantes/import/enums
+    keyword = pal.magenta.base, -- theme.keyword/storage/template_delimiter (#A86EC9)
+    statement = pal.magenta.base,
+    special = pal.magenta.base,
 
-    -- vermelho
-    keyword = pal.red.base,
-    conditional = pal.red.base,
-    statement = pal.red.base,
-    preproc = pal.pink.bright, -- preproc em salmão vivo
+    -- Identificadores/variáveis/campos/tags = vermelho "D55070"
+    ident = "#D55070", -- aproxima Ident/Variable do theme.variable/title/tag/field
+    variable = "#D55070",
+    field = "#D55070",
 
-    -- azul
-    func = pal.blue.bright, -- funções/títulos
-    type = pal.blue.base, -- tipos/classes/constructors
+    -- Funções/títulos = turquesa (func = #24A1AD)
+    func = "#24A1AD",
 
-    -- detalhes frios
-    field = pal.cyan.base, -- fields/propriedades/atributos
-    operator = pal.pink.base, -- operadores (salmão)
-    regex = pal.yellow.bright,
+    -- Tipos/estruturas = tons quentes claros (type/structure)
+    type = "#E4B28E",
 
-    -- builtins seguindo a mesma lógica
-    builtin0 = pal.cyan.base, -- builtin var
-    builtin1 = pal.blue.bright, -- builtin type
-    builtin2 = pal.orange.bright, -- builtin const
+    -- Builtins alinhados ao Horizon:
+    builtin0 = "#D55070", -- builtin var => vermelho (coincide com variable/tag)
+    builtin1 = "#24A1AD", -- builtin type => turquesa
+    builtin2 = pal.orange.bright, -- builtin const => #FAB38E
     builtin3 = pal.red.bright, -- reserva
     dep = spec.fg3,
+    preproc = pal.pink.bright,
   }
 
+  -- Diagnostics (theme.error/warning/ok/info)
   spec.diag = {
-    error = pal.red.base,
-    warn = pal.yellow.base,
-    info = pal.blue.base,
-    hint = pal.green.base,
-    ok = pal.green.base,
+    error = "#F43E5C", -- ui.negative
+    warn = "#FAB38E", -- ui.tertiaryAccent
+    info = "#24A1AD", -- theme.func.fg (info fria)
+    hint = "#24A075", -- ui.positive/ git_added_fg
+    ok = "#24A075",
   }
 
   spec.diag_bg = {
@@ -101,19 +102,21 @@ local function generate_spec(pal)
     ok = C(spec.bg1):blend(C(spec.diag.ok), 0.15):to_css(),
   }
 
+  -- Diff (da tabela theme.*_bg)
   spec.diff = {
-    add = C(spec.bg1):blend(C(pal.green.base), 0.20):to_css(),
-    delete = C(spec.bg1):blend(C(pal.red.base), 0.25):to_css(),
-    change = C(spec.bg1):blend(C(pal.cyan.base), 0.20):to_css(),
-    text = C(spec.bg1):blend(C(pal.cyan.base), 0.35):to_css(),
+    add = "#1A3432", -- diff_added_bg
+    delete = "#4A2024", -- diff_deleted_bg
+    change = C(spec.bg1):blend(C("#208F93"), 0.20):to_css(), -- coerente com sign_modified_bg
+    text = C(spec.bg1):blend(C("#208F93"), 0.35):to_css(),
   }
 
+  -- Git (da tabela theme/git_*_fg)
   spec.git = {
-    add = pal.green.base,
-    removed = pal.red.base,
-    changed = pal.yellow.base,
-    conflict = pal.orange.base,
-    ignored = pal.comment,
+    add = "#24A075",
+    removed = "#F43E5C",
+    changed = "#FAB38E",
+    conflict = pal.red.bright,
+    ignored = spec.fg3,
   }
 
   return spec
