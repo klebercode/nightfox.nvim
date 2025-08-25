@@ -14,9 +14,9 @@ local palette = {
   cyan = Shade.new("#21BFC2", "#6BE6E6", "#1AA6A9"),
   white = Shade.new("#D5D8DA", "#FDF0ED", "#B7BBBE"),
   orange = Shade.new("#FAB795", "#FBC3A7", "#D89B7C"),
-  pink = Shade.new("#EE64AE", "#F075B7", "#C85494"),
+  pink = Shade.new("#F09383", "#F6A399", "#C9786F"), -- salmão (operators)
 
-  comment = "#4A4F66", -- mais discreto
+  comment = "#4A4F66",
 
   -- UI
   bg0 = "#1A1C23",
@@ -49,35 +49,35 @@ local function generate_spec(pal)
     sel1 = pal.sel1,
   }
 
-  -- >>> MAPEAMENTO com ênfase em VERMELHO + AMARELO/LARANJA + AZUL
+  -- >>> Mapeamento alinhado ao Horizon (ênfase: red + orange/yellow + blue)
   spec.syntax = {
     -- neutros
     bracket = spec.fg3,
     comment = pal.comment,
     ident = spec.fg1,
     variable = spec.fg1,
-    operator = pal.pink.base, -- salmão clássico do Horizon
 
-    -- “amarelo/laranja”: strings, números, consts, imports, enums
-    string = pal.yellow.base,
-    number = pal.orange.base,
-    const = pal.orange.bright,
+    -- laranja/amarelo
+    string = pal.yellow.base, -- strings
+    number = pal.orange.base, -- números
+    const = pal.orange.bright, -- constantes/import/enums
 
-    -- “vermelho”: keywords, condicionais, statements
+    -- vermelho
     keyword = pal.red.base,
     conditional = pal.red.base,
     statement = pal.red.base,
-    preproc = pal.pink.bright,
+    preproc = pal.pink.bright, -- preproc em salmão vivo
 
-    -- “azul”: funções e títulos
-    func = pal.blue.bright,
+    -- azul
+    func = pal.blue.bright, -- funções/títulos
+    type = pal.blue.base, -- tipos/classes/constructors
 
-    -- detalhes em cyan/verde/azul
-    field = pal.cyan.base, -- atributos/propriedades
-    type = pal.cyan.base, -- tipos/classes mais frios (sem roxo)
+    -- detalhes frios
+    field = pal.cyan.base, -- fields/propriedades/atributos
+    operator = pal.pink.base, -- operadores (salmão)
     regex = pal.yellow.bright,
 
-    -- builtins (seguindo mesma lógica)
+    -- builtins seguindo a mesma lógica
     builtin0 = pal.cyan.base, -- builtin var
     builtin1 = pal.blue.bright, -- builtin type
     builtin2 = pal.orange.bright, -- builtin const
