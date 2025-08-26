@@ -1,132 +1,120 @@
 local C = require("nightfox.lib.color")
 local Shade = require("nightfox.lib.shade")
 
-local meta = { name = "horizonfox", light = false }
+-- HorizonFox — Nightfox palette using Horizon (dark) colors
 
--- Paleta fiel ao Horizon (tabela que você enviou), sem HEX solto no spec.
+local meta = {
+  name = "horizonfox",
+  light = false,
+}
+
+-- Paleta Horizon (dark)
+-- Tons principais: bg grafite, fg neutro suave, laranja/ciano/roxo característicos
+-- Ajustei "bright" e "dim" de cada Shade para ficarem coerentes com o Horizon.
 local palette = {
-  -- ANSI / primárias (Shade: base, bright, dim)
-  black = Shade.new("#1A1C23", "#232530", "#16161C"),
-  red = Shade.new("#E95678", "#EC6A88", "#D55070"), -- dim casa com variable/tag
-  green = Shade.new("#29D398", "#3FDAA4", "#24A075"),
-  -- Amarelos/laranjas: usamos 'yellow' p/ tipos e 'orange' p/ const/regex
-  yellow = Shade.new("#E4B28E", "#FAB38E", "#E4A88A"), -- base=type, bright=tertiaryAccent, dim=string
-  blue = Shade.new("#26BBD9", "#3FC4DE", "#208F93"),
-  magenta = Shade.new("#A86EC9", "#B877DB", "#9961BA"),
-  cyan = Shade.new("#59E1E3", "#6BE4E6", "#25B0BC"),
-  white = Shade.new("#BBBBBB", "#D5D8DA", "#A3A7AB"),
-  orange = Shade.new("#DB887A", "#FAB38E", "#D89B7C"), -- const/regex
+  black = Shade.new("#1A1C23", "#232530", "#151720"),
+  red = Shade.new("#E95678", "#EC6A88", "#C7445F"),
+  green = Shade.new("#09F7A0", "#3FDAA4", "#07C985"),
+  yellow = Shade.new("#FAC29A", "#FFD2B9", "#DDAF8A"),
+  blue = Shade.new("#26BBD9", "#3FC6DE", "#1E9AB4"),
+  magenta = Shade.new("#B877DB", "#C691E9", "#9961BA"),
+  cyan = Shade.new("#21BFC2", "#6BE6E6", "#1AA6A9"),
+  white = Shade.new("#D5D8DA", "#FDF0ED", "#B7BBBE"),
+  orange = Shade.new("#FAB795", "#FBC3A7", "#D89B7C"),
+  pink = Shade.new("#EE64AE", "#F075B7", "#C85494"),
 
-  -- UI e auxiliares (vindos de theme/ui)
-  comment = "#4C4D53",
-  delimiter = "#6C6D71",
-  operator = "#BBBBBB",
+  comment = "#6C6F93",
 
-  variable = "#D55070", -- variable/title/tag/field
-  field = "#D55070",
-  func = "#24A1AD", -- functions/titles
-  type_fg = "#E4B28E", -- alias p/ yellow.base
-  string = "#E4A88A", -- alias p/ yellow.dim
+  -- UI (Horizon dark)
+  bg0 = "#1A1C23", -- statusline/float mais escuro
+  bg1 = "#1C1E26", -- fundo principal
+  bg2 = "#232530", -- cursorline / popups
+  bg3 = "#2E303E", -- bordas / thumbs
+  bg4 = "#3A3D4C", -- border fg um pouco mais claro
 
-  diag_error = "#F43E5C",
-  diag_warn = "#FAB38E",
-  diag_info = "#24A1AD",
-  diag_hint = "#24A075",
+  fg0 = "#E6E9EB", -- fg mais claro
+  fg1 = "#D5D8DA", -- fg padrão
+  fg2 = "#B9BEC4", -- fg um pouco mais escuro
+  fg3 = "#6C6F93", -- números de linha / pontuação
 
-  -- UI backgrounds/foregrounds
-  bg0 = "#1A1C23",
-  bg1 = "#1C1E26",
-  bg2 = "#232530",
-  bg3 = "#2E303E",
-  bg4 = "#343647",
-
-  fg0 = "#D5D8DA",
-  fg1 = "#BBBBBB",
-  fg2 = "#797B80",
-  fg3 = "#54565C",
-
-  sel0 = "#232530", -- float/pmenu/visual
-  sel1 = "#21232D", -- cursorline
+  sel0 = "#232530", -- visual/popup bg
+  sel1 = "#2E303E", -- seleção/pesquisa
 }
 
 local function generate_spec(pal)
+  -- stylua: ignore start
   local spec = {
-    bg0 = pal.bg0,
-    bg1 = pal.bg1,
-    bg2 = pal.bg2,
-    bg3 = pal.bg3,
-    bg4 = pal.bg4,
-    fg0 = pal.fg0,
-    fg1 = pal.fg1,
-    fg2 = pal.fg2,
-    fg3 = pal.fg3,
-    sel0 = pal.sel0,
-    sel1 = pal.sel1,
+    bg0  = pal.bg0,  -- Dark bg (status line and float)
+    bg1  = pal.bg1,  -- Default bg
+    bg2  = pal.bg2,  -- Lighter bg (colorcolm folds)
+    bg3  = pal.bg3,  -- Lighter bg (cursor line)
+    bg4  = pal.bg4,  -- Conceal, border fg
+
+    fg0  = pal.fg0,  -- Lighter fg
+    fg1  = pal.fg1,  -- Default fg
+    fg2  = pal.fg2,  -- Darker fg (status line)
+    fg3  = pal.fg3,  -- Darker fg (line numbers, fold colums)
+
+    sel0 = pal.sel0, -- Popup bg, visual selection bg
+    sel1 = pal.sel1, -- Popup sel bg, search bg
   }
 
-  -- Sintaxe (tudo referenciando 'palette', sem HEX literal)
   spec.syntax = {
-    comment = pal.comment,
-    bracket = pal.delimiter,
-    operator = pal.operator,
-
-    string = pal.string, -- #E4A88A
-    number = pal.orange.base, -- #DB887A
-    const = pal.orange.bright, -- #FAB38E
-    regex = pal.orange.base,
-
-    keyword = pal.magenta.base, -- #A86EC9
-    statement = pal.magenta.base,
-    special = pal.magenta.base,
-
-    ident = pal.white.base, -- neutro
-    variable = pal.variable, -- #D55070
-    field = pal.field, -- #D55070
-
-    func = pal.func, -- #24A1AD
-    type = pal.type_fg, -- #E4B28E
-
-    builtin0 = pal.variable, -- builtin var
-    builtin1 = pal.orange.base, -- builtin type
-    builtin2 = pal.orange.bright, -- builtin const
-    builtin3 = pal.red.bright,
-    dep = spec.fg3,
-    preproc = pal.pink.bright,
+    bracket     = spec.fg2,           -- Brackets and Punctuation
+    builtin0    = pal.red.base,       -- Builtin variable
+    builtin1    = pal.cyan.bright,    -- Builtin type
+    builtin2    = pal.orange.bright,  -- Builtin const
+    builtin3    = pal.red.bright,     -- Not used
+    comment     = pal.comment,        -- Comment
+    conditional = pal.magenta.bright, -- Conditional and loop
+    const       = pal.orange.bright,  -- Constants, imports and booleans
+    dep         = spec.fg3,           -- Deprecated
+    field       = pal.blue.base,      -- Field
+    func        = pal.blue.bright,    -- Functions and Titles
+    ident       = pal.cyan.base,      -- Identifiers
+    keyword     = pal.magenta.base,   -- Keywords
+    number      = pal.orange.base,    -- Numbers
+    operator    = spec.fg2,           -- Operators
+    preproc     = pal.pink.bright,    -- PreProc
+    regex       = pal.yellow.bright,  -- Regex
+    statement   = pal.magenta.base,   -- Statements
+    string      = pal.green.base,     -- Strings
+    type        = pal.yellow.base,    -- Types
+    variable    = pal.white.base,     -- Variables
   }
 
-  -- Diagnostics
   spec.diag = {
-    error = pal.diag_error,
-    warn = pal.diag_warn,
-    info = pal.diag_info,
-    hint = pal.diag_hint,
-    ok = pal.diag_hint,
+    error = pal.red.base,
+    warn  = pal.yellow.base,
+    info  = pal.blue.base,
+    hint  = pal.green.base,
+    ok    = pal.green.base,
   }
 
   spec.diag_bg = {
-    error = C(spec.bg1):blend(C(spec.diag.error), 0.15):to_css(),
-    warn = C(spec.bg1):blend(C(spec.diag.warn), 0.15):to_css(),
-    info = C(spec.bg1):blend(C(spec.diag.info), 0.15):to_css(),
-    hint = C(spec.bg1):blend(C(spec.diag.hint), 0.15):to_css(),
-    ok = C(spec.bg1):blend(C(spec.diag.ok), 0.15):to_css(),
+    error = C(spec.bg1):blend(C(spec.diag.error), 0.2):to_css(),
+    warn  = C(spec.bg1):blend(C(spec.diag.warn), 0.2):to_css(),
+    info  = C(spec.bg1):blend(C(spec.diag.info), 0.2):to_css(),
+    hint  = C(spec.bg1):blend(C(spec.diag.hint), 0.2):to_css(),
+    ok    = C(spec.bg1):blend(C(spec.diag.ok), 0.2):to_css(),
   }
 
-  -- Diff (usa os tons do theme)
   spec.diff = {
-    add = "#1A3432",
-    delete = "#4A2024",
-    change = C(spec.bg1):blend(C(pal.blue.dim), 0.20):to_css(),
-    text = C(spec.bg1):blend(C(pal.blue.dim), 0.35):to_css(),
+    add    = C(spec.bg1):blend(C(pal.green.dim), 0.15):to_css(),
+    delete = C(spec.bg1):blend(C(pal.red.dim), 0.15):to_css(),
+    change = C(spec.bg1):blend(C(pal.blue.dim), 0.15):to_css(),
+    text   = C(spec.bg1):blend(C(pal.cyan.dim), 0.25):to_css(),
   }
 
-  -- Git (do theme)
   spec.git = {
-    add = pal.green.dim, -- #24A075
-    removed = pal.diag_error, -- #F43E5C
-    changed = pal.orange.bright, -- #FAB38E
-    conflict = pal.red.bright,
-    ignored = spec.fg3,
+    add      = pal.green.base,
+    removed  = pal.red.base,
+    changed  = pal.yellow.base,
+    conflict = pal.orange.base,
+    ignored  = pal.comment,
   }
+
+  -- stylua: ignore start
 
   return spec
 end
